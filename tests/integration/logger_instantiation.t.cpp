@@ -2,6 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <fstream>
+#include <iostream>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -17,7 +18,9 @@ bool validate_message_written(const std::string& file_path,
         return false;
     }
     std::string output;
+    std::cout << "Reading in file:" << std::endl;
     while (std::getline(fh, output)) {
+        std::cout << output << std::endl;
         return expected_message == output;
     }
     return false;

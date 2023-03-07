@@ -17,7 +17,7 @@ class Logger {
     Logger(LoggingLevel&& level, std::ofstream&& fh)
         : d_level{std::move(level)}, d_file{std::move(fh)} {};
 
-    const char* get_time();
+    void decorate();
 
    public:
     static std::optional<Logger> get_logger(LoggingLevel&& level,
@@ -27,13 +27,15 @@ class Logger {
 
     template <typename... ARGS>
     void output(const std::string& output_line, ARGS&&...) {
-        d_file << get_time() << " " << output_line << std::endl;
+        decorate();
+        d_file << output_line << std::endl;
         return;
     }
 
     template <typename... ARGS>
     void output(std::string&& output_line, ARGS&&...) {
-        d_file << get_time() << " " << output_line << std::endl;
+        decorate();
+        d_file << output_line << std::endl;
         return;
     }
 };
