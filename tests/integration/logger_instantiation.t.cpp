@@ -6,6 +6,7 @@
 #include <iostream>
 #include <optional>
 #include <regex>  // If you solve a problem with regex you now have two problems...
+#include <set>
 #include <sstream>
 #include <string>
 
@@ -81,7 +82,7 @@ bool validate_single_message_written(const std::string& file_path,
 };
 
 bool validate_messages_written(
-    const std::string& file_path, LoggingLevel level,
+    const std::string& file_path,
     const std::vector<std::pair<LoggingLevel, std::string>> messages) {
     std::vector<std::regex> expected_messages;
     expected_messages.reserve(messages.size());
@@ -136,6 +137,36 @@ SCENARIO("Outputting Data") {
             THEN("The file being written to contains the message") {
                 CHECK(utils::validate_single_message_written(
                     file_path, LoggingLevel::INFO, message));
+            }
+        }
+    }
+
+    fh.flush();
+    GIVEN(
+        "An operating `Logger`, a basic message and a variety of "
+        "`LoggingLevel`s") {
+        auto logger = Logger::get_logger(LoggingLevel::DEBUG, file_path);
+        REQUIRE(logger);
+        std::string message{"Basic message!"};
+        std::set<LoggingLevel> levels{LoggingLevel::DEBUG, LoggingLevel::INFO,
+                                      LoggingLevel::WARN, LoggingLevel::ERROR};
+        WHEN("`output` is called on the `Logger`") {
+            std::for_each(levels.begin(), levels.end(),
+                          [&logger, &message](LoggingLevel level) {
+                              logger->output(level, message);
+                          });
+            THEN("The file contains all messages at expected levels") {
+                std::vector<std::pair<LoggingLevel, std::string>>
+                    expected_messages;
+                expected_messages.reserve(levels.size());
+                std::transform(levels.begin(), levels.end(),
+                               std::back_inserter(expected_messages),
+                               [&message](LoggingLevel level) {
+                                   return std::make_pair(level, message);
+                               });
+
+                CHECK(utils::validate_messages_written(file_path,
+                                                       expected_messages));
             }
         }
     }
