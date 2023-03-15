@@ -92,6 +92,8 @@ class FileHandlingFixture {
         std::remove(d_file_path.c_str());
     };
     ~FileHandlingFixture() { std::remove(d_file_path.c_str()); }
+
+    void flush() { std::remove(d_file_path.c_str()); }
 };
 
 SCENARIO("Standard Initialisation") {
