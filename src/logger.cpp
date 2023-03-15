@@ -1,5 +1,6 @@
-#include <date/date.h>
 #include <logger.h>
+
+#include <date/date.h>
 
 #include <chrono>
 #include <ctime>
