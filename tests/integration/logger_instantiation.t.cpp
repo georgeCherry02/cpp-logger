@@ -80,6 +80,20 @@ bool validate_single_message_written(const std::string& file_path,
         file_path, {construct_expected_log_line(level, expected_message)});
 };
 
+bool validate_messages_written(
+    const std::string& file_path, LoggingLevel level,
+    const std::vector<std::pair<LoggingLevel, std::string>> messages) {
+    std::vector<std::regex> expected_messages;
+    expected_messages.reserve(messages.size());
+    std::transform(messages.begin(), messages.end(),
+                   std::back_inserter(expected_messages),
+                   [](const auto& message) -> std::regex {
+                       auto& [level, line] = message;
+                       return construct_expected_log_line(level, line);
+                   });
+    return validate_log_file(file_path, std::move(expected_messages));
+};
+
 }  // namespace utils
 
 class FileHandlingFixture {
