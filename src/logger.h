@@ -29,6 +29,11 @@ class Logger {
         d_file << output_line << std::endl;
         return;
     }
+
+    void error(const std::string& output_line);
+    void warn(const std::string& output_line);
+    void info(const std::string& output_line);
+    void debug(const std::string& output_line);
 };
 
 }  // namespace logger

@@ -44,4 +44,20 @@ void Logger::decorate(LoggingLevel&& level) {
     }
 }
 
+void Logger::error(const std::string& output_line) {
+    output(LoggingLevel::ERROR, output_line);
+}
+
+void Logger::warn(const std::string& output_line) {
+    output(LoggingLevel::WARN, output_line);
+}
+
+void Logger::info(const std::string& output_line) {
+    output(LoggingLevel::INFO, output_line);
+}
+
+void Logger::debug(const std::string& output_line) {
+    output(LoggingLevel::DEBUG, output_line);
+}
+
 }  // namespace logger
