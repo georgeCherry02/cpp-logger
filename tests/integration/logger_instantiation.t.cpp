@@ -51,9 +51,8 @@ bool validate_log_file(const std::string& file_path,
     return still_matches;
 };
 
-bool validate_single_message_written(const std::string& file_path,
-                                     LoggingLevel&& level,
-                                     const std::string& expected_message) {
+std::regex construct_expected_log_line(LoggingLevel level,
+                                       const std::string& message) {
     std::stringstream ss;
     ss << "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3} ";
     switch (level) {
@@ -70,16 +69,15 @@ bool validate_single_message_written(const std::string& file_path,
             ss << "DEBUG: ";
             break;
     }
-    ss << expected_message << "$";
-    std::regex r{ss.str()};
-    return validate_log_file(file_path, {r});
+    ss << message << "$";
+    return std::regex{ss.str()};
 };
 
-std::regex construct_expected_log_line(const LoggingLevel& level,
-                                       const std::string& message) {
-    std::stringstream ss;
-    ss << "*" << message;
-    return std::regex{ss.str()};
+bool validate_single_message_written(const std::string& file_path,
+                                     LoggingLevel level,
+                                     const std::string& expected_message) {
+    return validate_log_file(
+        file_path, {construct_expected_log_line(level, expected_message)});
 };
 
 }  // namespace utils
