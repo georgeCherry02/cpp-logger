@@ -2,6 +2,11 @@
 
 namespace logger {
 
-enum LoggingLevel { INFO, WARN, ERROR, DEBUG,};
+enum LoggingLevel {
+    INFO,
+    WARN,
+    ERROR,
+    DEBUG,
+};
 
-}
+}  // namespace logger
