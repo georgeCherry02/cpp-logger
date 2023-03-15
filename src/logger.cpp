@@ -9,7 +9,7 @@
 
 namespace logger {
 
-std::optional<Logger> Logger::get_logger(LoggingLevel&& level,
+std::optional<Logger> Logger::get_logger(LoggingLevel level,
                                          const std::string& output_path) {
     std::ofstream fh{output_path};
     if (!fh.is_open()) {
@@ -19,7 +19,7 @@ std::optional<Logger> Logger::get_logger(LoggingLevel&& level,
     return Logger{std::move(level), std::move(fh)};
 };
 
-void Logger::set_level(LoggingLevel&& level) { d_level = level; }
+void Logger::set_level(LoggingLevel level) { d_level = level; }
 
 void Logger::decorate(LoggingLevel&& level) {
     using namespace std::chrono;

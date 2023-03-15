@@ -20,11 +20,11 @@ class Logger {
     void decorate(LoggingLevel&& level);
 
    public:
-    static std::optional<Logger> get_logger(LoggingLevel&& level,
+    static std::optional<Logger> get_logger(LoggingLevel level,
                                             const std::string& output_path);
-    void set_level(LoggingLevel&& level);
+    void set_level(LoggingLevel level);
 
-    void output(LoggingLevel&& level, const std::string& output_line) {
+    void output(LoggingLevel level, const std::string& output_line) {
         decorate(std::move(level));
         d_file << output_line << std::endl;
         return;
