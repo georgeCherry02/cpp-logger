@@ -55,8 +55,22 @@ bool validate_single_message_written(const std::string& file_path,
                                      LoggingLevel&& level,
                                      const std::string& expected_message) {
     std::stringstream ss;
-    ss << "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3} "
-       << expected_message << "$";
+    ss << "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3} ";
+    switch (level) {
+        case LoggingLevel::ERROR:
+            ss << "ERROR: ";
+            break;
+        case LoggingLevel::WARN:
+            ss << "WARN: ";
+            break;
+        case LoggingLevel::INFO:
+            ss << "INFO: ";
+            break;
+        case LoggingLevel::DEBUG:
+            ss << "DEBUG: ";
+            break;
+    }
+    ss << expected_message << "$";
     std::regex r{ss.str()};
     return validate_log_file(file_path, {r});
 };
@@ -104,7 +118,7 @@ SCENARIO("Outputting Data") {
         REQUIRE(logger);
         std::string message{"Basic message!"};
         WHEN("`output` is called on said `Logger`") {
-            logger->output(message);
+            logger->output(LoggingLevel::INFO, message);
             THEN("The file being written to contains the message") {
                 CHECK(utils::validate_single_message_written(
                     file_path, LoggingLevel::INFO, message));

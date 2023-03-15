@@ -1,6 +1,5 @@
-#include <logger.h>
-
 #include <date/date.h>
+#include <logger.h>
 
 #include <chrono>
 #include <ctime>
@@ -22,11 +21,27 @@ std::optional<Logger> Logger::get_logger(LoggingLevel&& level,
 
 void Logger::set_level(LoggingLevel&& level) { d_level = level; }
 
-void Logger::decorate() {
+void Logger::decorate(LoggingLevel&& level) {
     using namespace std::chrono;
     auto time = floor<milliseconds>(system_clock::now());
     using namespace date;
     d_file << time << " ";
+    switch (level) {
+        case LoggingLevel::ERROR:
+            d_file << "ERROR: ";
+            break;
+        case LoggingLevel::WARN:
+            d_file << "WARN: ";
+            break;
+        case LoggingLevel::INFO:
+            d_file << "INFO: ";
+            break;
+        case LoggingLevel::DEBUG:
+            d_file << "DEBUG: ";
+            break;
+        default:
+            d_file << "LOGGING ERROR (Invalid Level): ";
+    }
 }
 
 }  // namespace logger

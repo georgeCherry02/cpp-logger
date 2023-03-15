@@ -17,24 +17,15 @@ class Logger {
     Logger(LoggingLevel&& level, std::ofstream&& fh)
         : d_level{std::move(level)}, d_file{std::move(fh)} {};
 
-    void decorate();
+    void decorate(LoggingLevel&& level);
 
    public:
     static std::optional<Logger> get_logger(LoggingLevel&& level,
                                             const std::string& output_path);
-
     void set_level(LoggingLevel&& level);
 
-    template <typename... ARGS>
-    void output(const std::string& output_line, ARGS&&...) {
-        decorate();
-        d_file << output_line << std::endl;
-        return;
-    }
-
-    template <typename... ARGS>
-    void output(std::string&& output_line, ARGS&&...) {
-        decorate();
+    void output(LoggingLevel&& level, const std::string& output_line) {
+        decorate(std::move(level));
         d_file << output_line << std::endl;
         return;
     }
