@@ -111,9 +111,9 @@ SCENARIO("Standard Initialisation") {
 }
 
 SCENARIO("Outputting Data") {
-    // FileHandlingFixture fh{"test.txt"};
+    const std::string file_path{"test.txt"};
+    FileHandlingFixture fh{file_path};
     GIVEN("An operating `Logger` and a basic message") {
-        const std::string file_path{"test.txt"};
         auto logger = Logger::get_logger(LoggingLevel::INFO, file_path);
         REQUIRE(logger);
         std::string message{"Basic message!"};
